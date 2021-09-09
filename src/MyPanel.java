@@ -115,6 +115,7 @@ class MyPanel extends JPanel {
             if(!secondInput && firstInput){
                 displayTextArea.setText(""+tempForResult);
                 reset();
+
             }else if(secondInput){
                 double operand = Double.parseDouble(tempForNumber.toString());
                 calculateResult(operation,operand);
@@ -129,10 +130,13 @@ class MyPanel extends JPanel {
         });
 
         clearAllButton.addActionListener(e -> {
+            reset();
+            displayTextArea.setText("");
         });
         clearButton.addActionListener(e -> {
         });
 
+        displayTextArea.setEditable(false);
         displayTextArea.setBounds(5, 10, 395, 160);
         clearAllButton.setBounds(5, 180, 95, 70);
         clearButton.setBounds(105, 180, 95, 70);
@@ -160,11 +164,10 @@ class MyPanel extends JPanel {
     private void numberInput(int number) {
         if (tempForNumber.length() < 8) {
             tempForNumber.append(number);
-            tempForResult = Double.parseDouble(tempForNumber.toString());
             tempString.append(number);
             displayTextArea.setText(tempString.toString());
             firstInput = true;
-            if (firstInput && pressSign) {
+            if (pressSign) {
                 secondInput = true;
             }
             pressSign = false;
@@ -213,8 +216,10 @@ class MyPanel extends JPanel {
         tempForResult = 0;
         tempForNumber.delete(0, tempForNumber.length());
         tempString.delete(0, tempString.length());
+        operation = "";
         firstInput = false;
         secondInput = false;
+        pressSign = false;
     }
 
     private void onSignButtonClick(String buttonOperation) {
