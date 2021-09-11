@@ -3,10 +3,10 @@ import javax.swing.*;
 
 class MyPanel extends JPanel {
 
-    final int PANEL_WIDTH = 406;
-    final int PANEL_HEIGHT = 578;
+    private final int PANEL_WIDTH = 406;
+    private final int PANEL_HEIGHT = 578;
 
-    private JTextArea displayTextArea = new JTextArea(5, 5);
+    private JTextArea displayTextArea = new JTextArea(1, 1);
     private JButton clearAllButton = new JButton("AC");
     private JButton clearButton = new JButton("C");
     private JButton percentSignButton = new JButton("%");
@@ -29,13 +29,13 @@ class MyPanel extends JPanel {
     private JButton equalSignButton = new JButton("=");
     private JLabel jcomp22 = new JLabel("newLabel");
 
-    private double tempForResult = 0;
-    private String operation = "";
-    private StringBuilder tempForNumber = new StringBuilder();
-    private StringBuilder tempString = new StringBuilder();
-    private boolean pressSign = false;
-    private boolean firstInput = false;
-    private boolean secondInput = false;
+    private double result = 0;
+    private String operationSign = "";
+    private StringBuilder inputStringNumber = new StringBuilder();
+    private StringBuilder displayString = new StringBuilder();
+    private boolean isPressSign = false;
+    private boolean isFirstInput = false;
+    private boolean isSecondInput = false;
 
     MyPanel() {
 
@@ -66,60 +66,59 @@ class MyPanel extends JPanel {
         add(jcomp22);
 
         zeroButton.addActionListener(e -> {
-            numberInput(0);
+            inputNumber(0);
         });
         oneButton.addActionListener(e -> {
-            numberInput(1);
+            inputNumber(1);
         });
         twoButton.addActionListener(e -> {
-            numberInput(2);
+            inputNumber(2);
         });
         threeButton.addActionListener(e -> {
-            numberInput(3);
+            inputNumber(3);
         });
         fourButton.addActionListener(e -> {
-            numberInput(4);
+            inputNumber(4);
         });
         fiveButton.addActionListener(e -> {
-            numberInput(5);
+            inputNumber(5);
         });
         sixButton.addActionListener(e -> {
-            numberInput(6);
+            inputNumber(6);
         });
         sevenButton.addActionListener(e -> {
-            numberInput(7);
+            inputNumber(7);
         });
         eightButton.addActionListener(e -> {
-            numberInput(8);
+            inputNumber(8);
         });
         nineButton.addActionListener(e -> {
-            numberInput(9);
+            inputNumber(9);
         });
 
         percentSignButton.addActionListener(e -> {
         });
         multiplySignButton.addActionListener(e -> {
-            onSignButtonClick("multiply");
+            onClickSign("multiply");
         });
         divideSignButton.addActionListener(e -> {
-            onSignButtonClick("divide");
+            onClickSign("divide");
         });
         minusSignButton.addActionListener(e -> {
-            onSignButtonClick("minus");
+            onClickSign("minus");
         });
         plusSignButton.addActionListener(e -> {
-            onSignButtonClick("plus");
+            onClickSign("plus");
         });
 
         equalSignButton.addActionListener(e -> {
-            if(!secondInput && firstInput){
-                displayTextArea.setText(""+tempForResult);
+            if (isFirstInput && !isSecondInput) {
+                displayTextArea.setText("" + result);
                 reset();
-
-            }else if(secondInput){
-                double operand = Double.parseDouble(tempForNumber.toString());
-                calculateResult(operation,operand);
-                displayTextArea.setText("" + tempForResult);
+            } else if (isSecondInput) {
+                double operand = Double.parseDouble(inputStringNumber.toString());
+                calculateResult(operationSign, operand);
+                displayTextArea.setText("" + result);
                 reset();
             }
         });
@@ -131,6 +130,7 @@ class MyPanel extends JPanel {
 
         clearAllButton.addActionListener(e -> {
             reset();
+            result = 0;
             displayTextArea.setText("");
         });
         clearButton.addActionListener(e -> {
@@ -161,93 +161,98 @@ class MyPanel extends JPanel {
         jcomp22.setBounds(5, 555, 395, 15);
     }
 
-    private void numberInput(int number) {
-        if (tempForNumber.length() < 8) {
-            tempForNumber.append(number);
-            tempString.append(number);
-            displayTextArea.setText(tempString.toString());
-            firstInput = true;
-            if (pressSign) {
-                secondInput = true;
+    private void inputNumber(int inputNumber) {
+
+        if (inputStringNumber.length() < 8) {
+            inputStringNumber.append(inputNumber);
+            displayString.append(inputNumber);
+            displayTextArea.setText(displayString.toString());
+            isFirstInput = true;
+            if (isPressSign) {
+                isSecondInput = true;
             }
-            pressSign = false;
+            isPressSign = false;
         }
     }
 
-    private void calculateResult(String operation, double operand){
-        switch (operation) {
+    private void calculateResult(String operationSign, double operand) {
+        switch (operationSign) {
             case "plus":
-                tempForResult += operand;
+                result += operand;
                 break;
             case "minus":
-                tempForResult -= operand;
+                result -= operand;
                 break;
             case "multiply":
-                tempForResult *= operand;
+                result *= operand;
                 break;
-            case "divide":
-                tempForResult /= operand;
+            case "divide": 
+                result /= operand;
                 break;
         }
     }
 
-    private void chooseSign(String buttonOperation) {
-        switch (buttonOperation) {
+    private void chooseSign(String operationSign) {
+        switch (operationSign) {
             case "plus":
-                tempString.append(" + ");
-                displayTextArea.setText(tempString.toString());
+                displayString.append(" + ");
+                displayTextArea.setText(displayString.toString());
                 break;
             case "minus":
-                tempString.append(" - ");
-                displayTextArea.setText(tempString.toString());
+                displayString.append(" - ");
+                displayTextArea.setText(displayString.toString());
                 break;
             case "multiply":
-                tempString.append(" * ");
-                displayTextArea.setText(tempString.toString());
+                displayString.append(" * ");
+                displayTextArea.setText(displayString.toString());
                 break;
             case "divide":
-                tempString.append(" / ");
-                displayTextArea.setText(tempString.toString());
+                displayString.append(" / ");
+                displayTextArea.setText(displayString.toString());
                 break;
         }
     }
 
     private void reset() {
-        tempForResult = 0;
-        tempForNumber.delete(0, tempForNumber.length());
-        tempString.delete(0, tempString.length());
-        operation = "";
-        firstInput = false;
-        secondInput = false;
-        pressSign = false;
+        inputStringNumber.delete(0, inputStringNumber.length());
+        displayString.delete(0, displayString.length());
+        operationSign = "";
+        isFirstInput = false;
+        isSecondInput = false;
+        isPressSign = false;
     }
 
-    private void onSignButtonClick(String buttonOperation) {
+    private void onClickSign(String operationSign) {
 
-        if (secondInput) { // if you input second value and press sing -> Create shortcut - output result with input sing
-            double operand = Double.parseDouble(tempForNumber.toString());
-            tempString.delete(0, tempString.length());
 
-            calculateResult(operation,operand);
-            tempString.append(tempForResult);
-            chooseSign(buttonOperation);
+        if (isSecondInput) { // if you input second value and press sing -> Create shortcut - output result with input sing
+            double operand = Double.parseDouble(inputStringNumber.toString());
+            displayString.delete(0, displayString.length());
 
-            displayTextArea.setText(tempString.toString());
-            tempForNumber.delete(0, tempForNumber.length());
-            firstInput = true;
-            secondInput = false;
-            pressSign = true;
+            calculateResult(operationSign, operand);
+            displayString.append(result);
+            chooseSign(operationSign);
 
-        } else if (pressSign) { // if you already choose sign -> replace it
-            tempString.delete(tempString.length() - 3, tempString.length());
-            chooseSign(buttonOperation);
+            displayTextArea.setText(displayString.toString());
+            inputStringNumber.delete(0, inputStringNumber.length());
+            isFirstInput = true;
+            isSecondInput = false;
+            isPressSign = true;
 
-        } else if (firstInput) { // if you input firs number -> select sign
-            chooseSign(buttonOperation);
-            tempForResult = Double.parseDouble(tempForNumber.toString());
-            tempForNumber.delete(0, tempForNumber.length());
-            pressSign = true;
+        } else if (isPressSign) { // if you already choose sign -> replace it
+            displayString.delete(displayString.length() - 3, displayString.length());
+            chooseSign(operationSign);
+
+        } else if (isFirstInput) { // if you input firs inputNumber -> select sign
+            chooseSign(operationSign);
+            result = Double.parseDouble(inputStringNumber.toString());
+            inputStringNumber.delete(0, inputStringNumber.length());
+            isPressSign = true;
+        } else if (result != 0) {
+            displayString.append(result);
+            chooseSign(operationSign);
+            isPressSign = true;
         }
-        operation = buttonOperation;
+        operationSign = operationSign;
     }
 }
